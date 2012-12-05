@@ -1,7 +1,7 @@
 /*global jQuery: false, google: false */
 (function ($) {
     "use strict";
-    var gmap, gmarker, methods;
+    var methods;
 
     function findInfo(result, type) {
         var i, component;
@@ -60,13 +60,13 @@
         initMap: function () {
             var mapOptions = $.extend({}, this.settings.mapOptions);
             mapOptions.center = new google.maps.LatLng(mapOptions.center[0], mapOptions.center[1]);
-            gmap = new google.maps.Map($(this.settings.map)[0], mapOptions);
-            gmarker = new google.maps.Marker({
+            this.gmap = new google.maps.Map($(this.settings.map)[0], mapOptions);
+            this.gmarker = new google.maps.Marker({
                 position: mapOptions.center,
-                map: gmap,
+                map: this.gmap,
                 draggable: this.settings.draggableMarker
             });
-            gmarker.setVisible(false);
+            this.gmarker.setVisible(false);
         },
         geocode: function (query, process) {
             var labels, self = this;
@@ -93,11 +93,11 @@
             var currentItem = this.currentItem,
                 self = this;
 
-            if (gmarker) {
-                gmarker.setPosition(currentItem.geometry.location);
-                gmarker.setVisible(true);
+            if (this.gmarker) {
+                this.gmarker.setPosition(currentItem.geometry.location);
+                this.gmarker.setVisible(true);
 
-                gmap.fitBounds(currentItem.geometry.viewport);
+                this.gmap.fitBounds(currentItem.geometry.viewport);
             }
 
             $.each(this.settings.boundElements, function (selector, geocodeProperty) {
