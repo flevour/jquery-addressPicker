@@ -51,6 +51,36 @@ In most cases you will want to pass some options:
   </tr>
 </table>
 
+## Example instantiation
+```
+$('input selector').addressPicker({
+    map: '#map',
+    mapOptions:{
+        zoom: 11,
+        center: [47.383183,8.500671],
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    },
+    geocoderOptions: {
+        location: new google.maps.LatLng(47.3, 8.5),
+        region: 'CH',
+        bounds: new google.maps.LatLngBounds(new google.maps.LatLng(47.4, 8.3), new google.maps.LatLng(47.2, 8.6))
+    },
+    bindings: {
+        'selector': 'administrative_zone_2',
+        '#event_foo': function (data) {
+            var result = '';
+            _.each(data.address_components, function (value) {
+                if (matches = value.short_name.match(/District (\d{1,2})/)) {
+                    result = matches[1];
+                }
+            });
+            return result;
+        }
+    }
+});
+```
+
 ## Example address object from Google Maps Geocoding API
 ```
 {
@@ -106,4 +136,4 @@ In most cases you will want to pass some options:
          },
          "types" : [ "locality", "political" ]
       }
-``
+```
