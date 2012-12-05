@@ -1,4 +1,11 @@
 /*global jQuery: false, google: false */
+/*!
+ * jQuery Address Picker v1.4.4
+ *
+ * Copyright 2012, Francesco Levorato
+ * Licensed under the MIT license.
+ *
+ */
 (function ($) {
     "use strict";
     var methods;
@@ -118,5 +125,18 @@
             $.error('Method ' +  method + ' does not exist on jQuery.addressPicker');
         }
     };
+
+    // make IE think it doesn't suck
+    if (!Array.indexOf) {
+        Array.prototype.indexOf = function (obj) {
+            var i;
+            for (i = 0; i < this.length; i += 1) {
+                if (this[i] === obj) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+    }
 
 }(jQuery));

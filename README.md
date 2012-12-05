@@ -4,6 +4,7 @@ jQuery.addressPicker is a jQuery plugin that:
 * displays the selected address on a map
 * helps the developer in getting address details into a form
 
+Some of the ideas and some code are borrowed by [@sgruhier](https://github.com/sgruhier) [jQuery Address Picker](https://github.com/sgruhier/jquery-addresspicker) which depends on jQuery UI.
 
 ## Installation
 
