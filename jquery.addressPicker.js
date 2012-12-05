@@ -5,6 +5,9 @@
 
     function findInfo(result, type) {
         var i, component;
+        if (type === 'lat' || type === 'lng') {
+            return result.geometry.location[type]();
+        }
         if (result.address_components) {
             for (i = 0; i < result.address_components.length; i += 1) {
                 component = result.address_components[i];
