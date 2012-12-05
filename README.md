@@ -7,7 +7,7 @@ jQuery.addressPicker is a jQuery plugin that:
 
 ## Installation
 
-This plugin depends on jQuery (used with jQuery 1.8.2), bootstrap-typahead (version 2.2.1) and Google Maps.
+This plugin depends on jQuery (it was tested with jQuery 1.8.2), bootstrap-typahead (version 2.2.1) and Google Maps.
 ```
     <script src="js/jquery-1.8.2.min.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
