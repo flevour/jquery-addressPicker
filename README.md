@@ -13,7 +13,7 @@ This plugin depends on jQuery (it was tested with jQuery 1.8.2), bootstrap-typah
     <script src="js/jquery-1.8.2.min.js"></script>
     <script src="js/bootstrap-typeahead.js"></script>
     <script src="js/jquery.addressPicker.js"></script>
-    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="//maps.google.com/maps/api/js?sensor=false"></script>
 ```
 
 The Bootstrap Typahead plugin works out-of-the-box with Twitter Bootstrap CSS. This is not mandatory (you can write the CSS yourself), but it's the suggested way to start using it.
