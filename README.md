@@ -38,7 +38,7 @@ In most cases you will want to pass some options:
     <th>key</th><th>valid values</th><th>usage</th>
   </tr>
   <tr>
-    <td>map</td><td>(string) any valid selector</td><td>a selector for the element where the map synced with the input should be displayed</td>
+    <td>map</td><td>(string) any valid selector</td><td>a selector for the element where the map that will be kept in sync with the input should be displayed</td>
   </tr>
   <tr>
     <td>mapOptions</td><td>object</td><td>this value will be passed almost as is to the Google Maps constructor (see the <a href="https://developers.google.com/maps/documentation/javascript/reference#MapOptions">Google Maps JS API reference</a> for a list of all the keys you can use here). As it is a common need to indicate a center the `center` key can also be passed as a 2 elements array and the plugin will take care of transforming it into a LatLng object.</td>
