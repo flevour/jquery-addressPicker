@@ -25,6 +25,19 @@
       .map {
         height: 300px;
       }
+      @media (max-width: 767px) {
+        .affix {
+          position: static;
+        }
+      }
+      @media (min-width: 768px) and (max-width: 979px) {
+        .form-horizontal .control-label {
+          width: 80px;
+        }
+        .form-horizontal .controls {
+          margin-left: 100px;
+        }
+      }
     </style>
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 </head>
@@ -52,7 +65,7 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
-          <div class="well sidebar-nav affix span3">
+          <div class="well sidebar-nav span3" data-spy="affix">
             <ul class="nav nav-list">
               <li class="nav-header">Examples</li>
               <li><a href="#example1">Basic</a></li>
