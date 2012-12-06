@@ -27,8 +27,9 @@
     }
 
     methods = {
-        init: function (options) {
-            var settings = $.extend(true, {
+        init: function ($element, options) {
+            this.$element = $element;
+            this.settings = $.extend(true, {
                 map: false,
                 mapOptions: {
                     zoom: 5,
@@ -42,27 +43,23 @@
                 },
                 typeaheadOptions: {
                     source: $.proxy(methods.geocode, this),
-                    updater: $.proxy(methods.updater, this),
-                    matcher: methods.matcher,
-                    sorter: methods.sorter,
-                    highlighter: methods.highlighter
+                    updater: $.proxy(methods.updater, this)
                 },
                 boundElements: {}
             }, options);
             
-            this.settings = settings;
             // hash to store geocoder results keyed by address
-            this.addressMapping = {}; 
-            
+            this.addressMapping = {};
+            this.currentItem = '';
             this.geocoder = new google.maps.Geocoder();
 
             if (this.settings.map) {
                 methods.initMap.apply(this, undefined);
             }
 
-            return this
+            this.$element
                 .change($.proxy(methods.onChange, this))
-                .typeahead(settings.typeaheadOptions);
+                .typeahead(this.settings.typeaheadOptions);
         },
         initMap: function () {
             var mapOptions = $.extend({}, this.settings.mapOptions);
@@ -96,6 +93,9 @@
             this.currentItem = this.addressMapping[item];
             return item;
         },
+        currentItemData: function () {
+            return this.currentItem;
+        },
         onChange: function (event) {
             var currentItem = this.currentItem,
                 self = this;
@@ -117,12 +117,22 @@
     };
 
     $.fn.addressPicker = function (method) {
-        if (methods[method]) {
-            return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-        } else if (typeof method === 'object' || ! method) {
-            return methods.init.apply(this, arguments);
+        var $this = this, addressPicker = this.data('addressPicker');
+        if (addressPicker) {
+            if (typeof method === 'string' && addressPicker[method]) {
+                return addressPicker[method].apply(addressPicker, Array.prototype.slice.call(arguments, 1));
+            }
+            return $.error('Method ' +  method + ' does not exist on jQuery.addressPicker');
         } else {
-            $.error('Method ' +  method + ' does not exist on jQuery.addressPicker');
+            if (!method || typeof method === 'object') {
+                return this.each(function () {
+                    var addressPicker;
+                    addressPicker = $.extend({}, methods);
+                    addressPicker.init($this, method);
+                    $this.data('addressPicker', addressPicker);
+                });
+            }
+            return $.error('jQuery.addressPicker is not instantiated. Please call $("selector").addressPicker({options})');
         }
     };
 
