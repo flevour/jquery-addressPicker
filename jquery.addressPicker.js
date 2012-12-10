@@ -1,3 +1,4 @@
+/*jslint browser: true */
 /*global jQuery: false, google: false */
 /*!
  * jQuery Address Picker v1.4.4
@@ -8,7 +9,7 @@
  */
 (function ($) {
     "use strict";
-    var methods;
+    var methods, geocoderTimeoutId;
 
     function findInfo(result, type) {
         var i, component;
@@ -74,20 +75,30 @@
         },
         geocode: function (query, process) {
             var labels, self = this;
-            this.geocoder.geocode({
-                'address': query + this.settings.geocoderOptions.appendAddressString,
-                'region': this.settings.geocoderOptions.regionBias
-            }, function (geocoderResults, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    self.addressMapping = {};
-                    labels = [];
-                    $.each(geocoderResults, function (index, element) {
-                        self.addressMapping[element.formatted_address] = element;
-                        labels.push(element.formatted_address);
+
+            if (geocoderTimeoutId) {
+                clearTimeout(geocoderTimeoutId);
+                geocoderTimeoutId = false;
+            }
+            geocoderTimeoutId = setTimeout(
+                function geocodeString() {
+                    self.geocoder.geocode({
+                        'address': query + self.settings.geocoderOptions.appendAddressString,
+                        'region': self.settings.geocoderOptions.regionBias
+                    }, function (geocoderResults, status) {
+                        if (status === google.maps.GeocoderStatus.OK) {
+                            self.addressMapping = {};
+                            labels = [];
+                            $.each(geocoderResults, function (index, element) {
+                                self.addressMapping[element.formatted_address] = element;
+                                labels.push(element.formatted_address);
+                            });
+                            return process(labels);
+                        }
                     });
-                    return process(labels);
-                }
-            });
+                },
+                250
+            );
         },
         updater: function (item) {
             this.currentItem = this.addressMapping[item];
