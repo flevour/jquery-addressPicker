@@ -59,7 +59,6 @@
             }
 
             this.$element
-                .change($.proxy(methods.onChange, this))
                 .typeahead(this.settings.typeaheadOptions);
         },
         initMap: function () {
@@ -101,29 +100,31 @@
             );
         },
         updater: function (item) {
+            var self = this;
+
+            if (!this.addressMapping[item]) {
+                return;
+            }
             this.currentItem = this.addressMapping[item];
-            return item;
-        },
-        currentItemData: function () {
-            return this.currentItem;
-        },
-        onChange: function (event) {
-            var currentItem = this.currentItem,
-                self = this;
 
             if (this.gmarker) {
-                this.gmarker.setPosition(currentItem.geometry.location);
+                this.gmarker.setPosition(this.currentItem.geometry.location);
                 this.gmarker.setVisible(true);
 
-                this.gmap.fitBounds(currentItem.geometry.viewport);
+                this.gmap.fitBounds(this.currentItem.geometry.viewport);
             }
 
             $.each(this.settings.boundElements, function (selector, geocodeProperty) {
                 var newValue = $.isFunction(geocodeProperty)
-                    ? ($.proxy(geocodeProperty, self)(currentItem))
-                    : findInfo(currentItem, geocodeProperty);
+                    ? ($.proxy(geocodeProperty, self)(self.currentItem))
+                    : findInfo(self.currentItem, geocodeProperty);
                 $(selector).val(newValue);
             });
+
+            return item;
+        },
+        currentItemData: function () {
+            return this.currentItem;
         }
     };
 
