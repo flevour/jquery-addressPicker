@@ -44,7 +44,8 @@
                 },
                 typeaheadOptions: {
                     source: $.proxy(methods.geocode, this),
-                    updater: $.proxy(methods.updater, this)
+                    updater: $.proxy(methods.updater, this),
+                    matcher: $.proxy(methods.matcher, this)
                 },
                 boundElements: {}
             }, options);
@@ -122,6 +123,9 @@
             });
 
             return item;
+        },
+        matcher: function (item) {
+            return true; // match is handled by the geocoder service
         },
         currentItemData: function () {
             return this.currentItem;
