@@ -11,6 +11,16 @@
     "use strict";
     var methods, geocoderTimeoutId;
 
+    function indexOf(array, obj) {
+        var i;
+        for (i = 0; i < array.length; i += 1) {
+            if (array[i] === obj) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     function findInfo(result, type) {
         var i, component;
         if (type === 'lat' || type === 'lng') {
@@ -19,7 +29,7 @@
         if (result.address_components) {
             for (i = 0; i < result.address_components.length; i += 1) {
                 component = result.address_components[i];
-                if (component.types.indexOf(type) !== -1) {
+                if (indexOf(component.types, type) !== -1) {
                     return component.long_name;
                 }
             }
@@ -151,18 +161,5 @@
             return $.error('jQuery.addressPicker is not instantiated. Please call $("selector").addressPicker({options})');
         }
     };
-
-    // make IE think it doesn't suck
-    if (!Array.indexOf) {
-        Array.prototype.indexOf = function (obj) {
-            var i;
-            for (i = 0; i < this.length; i += 1) {
-                if (this[i] === obj) {
-                    return i;
-                }
-            }
-            return -1;
-        };
-    }
 
 }(jQuery));
