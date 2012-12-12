@@ -129,7 +129,9 @@
                 var newValue = $.isFunction(geocodeProperty)
                     ? ($.proxy(geocodeProperty, self)(self.currentItem))
                     : findInfo(self.currentItem, geocodeProperty);
-                $(selector).val(newValue);
+                if (newValue) {
+                    $(selector).val(newValue);
+                }
             });
 
             return item;
