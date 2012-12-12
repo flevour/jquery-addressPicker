@@ -70,6 +70,7 @@
             }
 
             this.$element
+                .attr('autocomplete', 'off')
                 .typeahead(this.settings.typeaheadOptions);
         },
         initMap: function () {
