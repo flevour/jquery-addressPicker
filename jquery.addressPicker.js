@@ -39,6 +39,7 @@
 
     methods = {
         init: function ($element, options) {
+            var self = this;
             this.$element = $element;
             this.settings = $.extend(true, {
                 map: false,
@@ -53,13 +54,17 @@
                     regionBias: ''
                 },
                 typeaheadOptions: {
-                    source: $.proxy(methods.geocode, this),
-                    updater: $.proxy(methods.updater, this),
-                    matcher: $.proxy(methods.matcher, this)
+                    source: methods.geocode,
+                    updater: methods.updater,
+                    matcher: methods.matcher
                 },
                 boundElements: {}
             }, options);
-            
+
+            $.each(this.settings.typeaheadOptions, function (key, method) {
+                self.settings.typeaheadOptions[key] = $.proxy(method, self);
+            });
+
             // hash to store geocoder results keyed by address
             this.addressMapping = {};
             this.currentItem = '';
