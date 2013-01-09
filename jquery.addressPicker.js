@@ -122,7 +122,7 @@
             if (!this.addressMapping[item]) {
                 return;
             }
-            this.currentItem = this.addressMapping[item];
+            this.currentItem = this.dataByAddress(item);
 
             if (this.gmarker) {
                 this.gmarker.setPosition(this.currentItem.geometry.location);
@@ -146,6 +146,9 @@
         },
         currentItemData: function () {
             return this.currentItem;
+        },
+        dataByAddress: function (address) {
+            return this.addressMapping[address] || {};
         }
     };
 
