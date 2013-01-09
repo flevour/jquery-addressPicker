@@ -117,24 +117,23 @@
             );
         },
         updater: function (item) {
-            var self = this;
+            var self = this, data = this.dataByAddress(item);
 
-            if (!this.addressMapping[item]) {
+            if (!data) {
                 return;
             }
-            this.currentItem = this.dataByAddress(item);
 
             if (this.gmarker) {
-                this.gmarker.setPosition(this.currentItem.geometry.location);
+                this.gmarker.setPosition(data.geometry.location);
                 this.gmarker.setVisible(true);
 
-                this.gmap.fitBounds(this.currentItem.geometry.viewport);
+                this.gmap.fitBounds(data.geometry.viewport);
             }
 
             $.each(this.settings.boundElements, function (selector, geocodeProperty) {
                 var newValue = $.isFunction(geocodeProperty)
-                    ? ($.proxy(geocodeProperty, self)(self.currentItem))
-                    : findInfo(self.currentItem, geocodeProperty);
+                    ? ($.proxy(geocodeProperty, self)(data))
+                    : findInfo(data, geocodeProperty);
                 newValue = newValue || '';
                 $(selector).val(newValue);
             });
@@ -145,7 +144,7 @@
             return true; // match is handled by the geocoder service
         },
         currentItemData: function () {
-            return this.currentItem;
+            return this.dataByAddress(this.$element.val());
         },
         dataByAddress: function (address) {
             return this.addressMapping[address] || {};
