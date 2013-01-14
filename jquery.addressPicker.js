@@ -62,7 +62,9 @@
             }, options);
 
             $.each(this.settings.typeaheadOptions, function (key, method) {
-                self.settings.typeaheadOptions[key] = $.proxy(method, self);
+                if ($.isFunction(self.settings.typeaheadOptions[key])) {
+                    self.settings.typeaheadOptions[key] = $.proxy(method, self);
+                }
             });
 
             // hash to store geocoder results keyed by address
