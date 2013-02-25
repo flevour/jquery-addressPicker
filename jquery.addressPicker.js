@@ -9,7 +9,7 @@
  */
 (function ($) {
     "use strict";
-    var methods, geocoderTimeoutId;
+    var methods, geocoderTimeoutId, originalTypeaheadSelectFunction;
 
     function indexOf(array, obj) {
         var i;
@@ -139,6 +139,8 @@
                 newValue = newValue || '';
                 $(selector).val(newValue);
             });
+
+            this.$element.trigger('selected.addressPicker', data);
 
             return item;
         },
