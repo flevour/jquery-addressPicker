@@ -54,7 +54,7 @@
                     regionBias: ''
                 },
                 typeaheadOptions: {
-                    source: methods.geocode,
+                    source: methods.source,
                     updater: methods.updater,
                     matcher: methods.matcher
                 },
@@ -78,6 +78,17 @@
 
             this.$element
                 .attr('autocomplete', 'off')
+                .on('refresh.addressPicker', function () {
+                    var newValue = $(this).val();
+                    self.geocode(newValue, function (geocoderResults) {
+                        self.addressMapping = {};
+                        $.each(geocoderResults, function (index, element) {
+                            self.addressMapping[element.formatted_address] = element;
+
+                            return self.updater.call(self, element.formatted_address);
+                        });
+                    });
+                })
                 .typeahead(this.settings.typeaheadOptions);
         },
         initMap: function () {
@@ -91,7 +102,7 @@
             });
             this.gmarker.setVisible(false);
         },
-        geocode: function (query, process) {
+        source: function (query, process) {
             var labels, self = this;
 
             if (geocoderTimeoutId) {
@@ -100,19 +111,14 @@
             }
             geocoderTimeoutId = setTimeout(
                 function geocodeString() {
-                    self.geocoder.geocode({
-                        'address': query + self.settings.geocoderOptions.appendAddressString,
-                        'region': self.settings.geocoderOptions.regionBias
-                    }, function (geocoderResults, status) {
-                        if (status === google.maps.GeocoderStatus.OK) {
-                            self.addressMapping = {};
-                            labels = [];
-                            $.each(geocoderResults, function (index, element) {
-                                self.addressMapping[element.formatted_address] = element;
-                                labels.push(element.formatted_address);
-                            });
-                            return process(labels);
-                        }
+                    self.geocode(query, function (geocoderResults) {
+                        self.addressMapping = {};
+                        labels = [];
+                        $.each(geocoderResults, function (index, element) {
+                            self.addressMapping[element.formatted_address] = element;
+                            labels.push(element.formatted_address);
+                        });
+                        return process(labels);
                     });
                 },
                 250
@@ -152,6 +158,16 @@
         },
         dataByAddress: function (address) {
             return this.addressMapping[address] || {};
+        },
+        geocode: function (query, callback) {
+            this.geocoder.geocode({
+                'address': query + this.settings.geocoderOptions.appendAddressString,
+                'region': this.settings.geocoderOptions.regionBias
+            }, function (geocoderResults, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    return callback.call(this, geocoderResults);
+                }
+            });
         }
     };
 
