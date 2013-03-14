@@ -84,6 +84,7 @@
                         self.addressMapping = {};
                         $.each(geocoderResults, function (index, element) {
                             self.addressMapping[element.formatted_address] = element;
+                            self.addressMapping[newValue] = element;
 
                             return self.updater.call(self, element.formatted_address);
                         });
