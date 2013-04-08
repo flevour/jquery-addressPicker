@@ -37,12 +37,25 @@
         return false;
     }
 
+    // @see http://stackoverflow.com/a/6055653/213903
+    function calculateZoomLevel(pixelWidth, sw, ne) {
+        var GLOBE_WIDTH = 256, // a constant in Google's map projection
+            west = sw.lng(),
+            east = ne.lng(),
+            angle = east - west;
+        if (angle < 0) {
+            angle += 360;
+        }
+        return Math.round(Math.log(pixelWidth * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+    }
+
     methods = {
         init: function ($element, options) {
             var self = this;
             this.$element = $element;
             this.settings = $.extend(true, {
                 map: false,
+                mapStatic: false,
                 mapOptions: {
                     zoom: 5,
                     center: [0, 0],
@@ -93,15 +106,42 @@
                 .typeahead(this.settings.typeaheadOptions);
         },
         initMap: function () {
-            var mapOptions = $.extend({}, this.settings.mapOptions);
-            mapOptions.center = new google.maps.LatLng(mapOptions.center[0], mapOptions.center[1]);
-            this.gmap = new google.maps.Map($(this.settings.map)[0], mapOptions);
-            this.gmarker = new google.maps.Marker({
-                position: mapOptions.center,
-                map: this.gmap,
-                draggable: this.settings.draggableMarker
-            });
-            this.gmarker.setVisible(false);
+            if (!this.settings.map) {
+                return;
+            }
+            var mapOptions = $.extend({}, this.settings.mapOptions),
+                $mapContainer = $(this.settings.map),
+                baseQueryParts;
+            if (this.settings.mapStatic) {
+                baseQueryParts = {
+                    mapType: mapOptions.mapTypeId,
+                    sensor: false,
+                    size: [$mapContainer.width(), $mapContainer.height()].join('x'),
+                    zoom: 13
+                };
+                this.$staticGmap = $('<img/>').on('center', function (e, location) {
+                    var query = [],
+                        queryParts = $.extend({}, baseQueryParts, location);
+
+                    $.each(queryParts, function (d) {
+                        query.push(encodeURIComponent(d) + "=" + encodeURIComponent(queryParts[d]));
+                    });
+                    $(this).attr('src', '//maps.googleapis.com/maps/api/staticmap?' + query.join('&'));
+                });
+                this.$staticGmap.trigger('center', {
+                    center: mapOptions.center.join(' ')
+                });
+                $mapContainer.append(this.$staticGmap);
+            } else {
+                mapOptions.center = new google.maps.LatLng(mapOptions.center[0], mapOptions.center[1]);
+                this.gmap = new google.maps.Map($mapContainer[0], mapOptions);
+                this.gmarker = new google.maps.Marker({
+                    position: mapOptions.center,
+                    map: this.gmap,
+                    draggable: this.settings.draggableMarker
+                });
+                this.gmarker.setVisible(false);
+            }
         },
         source: function (query, process) {
             var labels, self = this;
@@ -131,7 +171,12 @@
             if (!data) {
                 return;
             }
-
+            if (this.$staticGmap) {
+                this.$staticGmap.trigger('center', {
+                    zoom: calculateZoomLevel(this.$staticGmap.width(), data.geometry.viewport.getSouthWest(), data.geometry.viewport.getNorthEast()) - 2,
+                    markers: [data.geometry.location.lat(), data.geometry.location.lng()].join(' ')
+                });
+            }
             if (this.gmarker) {
                 this.gmarker.setPosition(data.geometry.location);
                 this.gmarker.setVisible(true);
