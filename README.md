@@ -20,6 +20,7 @@ The Bootstrap Typahead plugin works out-of-the-box with Twitter Bootstrap CSS. T
 ```
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 ```
+To avoid conflicts between Bootstrap CSS and Google Maps, make sure to apply the rule `#googleMap img {max-width: none;}` where `#googleMap` is the selector you are using to display the map.
 
 ## Usage
 
