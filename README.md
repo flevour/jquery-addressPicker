@@ -71,7 +71,7 @@ $('input selector').addressPicker({
         region: 'CH',
         bounds: new google.maps.LatLngBounds(new google.maps.LatLng(47.4, 8.3), new google.maps.LatLng(47.2, 8.6))
     },
-    bindings: {
+    boundElements: {
         'selector': 'administrative_zone_2',
         '#event_foo': function (data) {
             var result = '';
