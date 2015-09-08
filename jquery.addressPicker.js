@@ -62,6 +62,7 @@
                     scrollwheel: false,
                     mapTypeId: "roadmap"
                 },
+                componentRestrictions : {},
                 geocoderOptions: {
                     appendAddressString: '',
                     regionBias: ''
@@ -206,9 +207,11 @@
             return this.addressMapping[address] || {};
         },
         geocode: function (query, callback) {
+
             this.geocoder.geocode({
                 'address': query + this.settings.geocoderOptions.appendAddressString,
-                'region': this.settings.geocoderOptions.regionBias
+                'region': this.settings.geocoderOptions.regionBias,
+                'componentRestrictions' : this.settings.componentRestrictions
             }, function (geocoderResults, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     return callback.call(this, geocoderResults);
