@@ -54,9 +54,6 @@ In most cases you will want to pass some options:
   <tr>
     <td>boundElements</td><td>object</td><td>this value has to contain key/value pairs where the key is a `CSS selector` and the value can be either a `string` or a `function`. If a string is given, it will be used to select which address component will be set to fill the value of the element selected by the CSS selector. The string will be used to find the first component whose types contain it and return its long_name property.For a list of possible address components see the <a href="https://developers.google.com/maps/documentation/geocoding/#Types">Google Geocoding documentation</a>. If a function is given, it will be passed the address object as it is received by the geocoder. The function has to return a string. An address object sample can be found below.</td>
   </tr>
-  <tr>
-    <td>geocoderOptions.componentRestrictions</td><td>object</td><td>this values enables component restriction for filtering google results. <a href="https://developers.google.com/maps/documentation/javascript/examples/geocoding-component-restriction">Google Geocoding documentation</a></td>
-  </tr>
 </table>
 
 ## Example instantiation
