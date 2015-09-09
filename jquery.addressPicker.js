@@ -65,7 +65,7 @@
                 geocoderOptions: {
                     appendAddressString: '',
                     regionBias: '',
-                	componentRestrictions : {}
+                    componentRestrictions : {}
                 },
                 typeaheadOptions: {
                     source: methods.source,
